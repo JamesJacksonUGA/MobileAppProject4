@@ -14,6 +14,6 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
         viewPager = findViewById(R.id.pager);
         adapter = new QuizFragmentCollectionAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(adapter);//view pager activity contains instances of the fragment
     }
 }
