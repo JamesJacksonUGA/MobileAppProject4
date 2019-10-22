@@ -1,0 +1,19 @@
+package edu.uga.cs.captialquiz;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
+import android.os.Bundle;
+
+public class QuizActivity extends AppCompatActivity {
+    private ViewPager viewPager;
+    private QuizFragmentCollectionAdapter adapter;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_quiz);
+        viewPager = findViewById(R.id.pager);
+        adapter = new QuizFragmentCollectionAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+    }
+}
