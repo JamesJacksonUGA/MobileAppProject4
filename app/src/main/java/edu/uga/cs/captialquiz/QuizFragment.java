@@ -33,7 +33,7 @@ public class QuizFragment extends Fragment {
         textView = view.findViewById(R.id.fragText);
         String message = getArguments().getString("message");
         textView.setText(message);
-        //ADD A LIST ADAPTER OR SUM TO DISPLAY CHOICES
+
         return view;
     }
 
