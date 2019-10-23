@@ -34,7 +34,22 @@ public class QuizFragment extends Fragment {
         String message = getArguments().getString("message");
         textView.setText(message);
         //ADD A LIST ADAPTER OR SUM TO DISPLAY CHOICES
+
+
         return view;
+    }
+    /**This method handles picking random numbers for the quiz. use the returned array to map to the array of state objects.
+    *create a new array containing 6 objects randomly selected from AOB, set radio text/question equal to info gotten from that
+     * array[position]
+     * */
+    public int[] randomizeQuiz(){
+        int[] arr = new int[6];
+
+        for (int i = 0; i < arr.length; i ++){
+            arr[i] = (int)(Math.random()*((50-0)+1))+0;
+        }
+
+        return arr;
     }
 
 }
