@@ -18,11 +18,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     ContentValues contentValues;
     SQLiteDatabase db;
     public static final String DATABASE_NAME = "USQUIZ.db";
+    public static final int DATABASE_VERSION = 1;
     //---------------------------------------- QUIZ TABLE
     public static final String QUIZ_QUESTION_TABLE = "QUIZES";
     public static final String STATE_ID = "id";
     public static final String STATE_COLUMN_NAME = "State";
-    public static final String STATE_COLUMN_CAPITAL = "Captial";
+    public static final String STATE_COLUMN_CAPITAL = "Capital";
     public static final String STATE_COLUMN_CITY1 = "Second_City";
     public static final String STATE_COLUMN_CITY2 = "Third_City";
     //------------------------------------------
@@ -36,7 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + ")";
 
     public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
         Log.d("DATABASE_OPERATIONS", "Database created");
     }
 
@@ -59,7 +60,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("drop table if exists "+QUIZ_QUESTION_TABLE);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+QUIZ_QUESTION_TABLE);
         onCreate(sqLiteDatabase);
         Log.d( "DATABASE_OPERATIONS", "Table  upgraded" );
     }
