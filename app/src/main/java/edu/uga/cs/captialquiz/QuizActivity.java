@@ -28,6 +28,7 @@ public class QuizActivity extends AppCompatActivity {
         adapter = new QuizFragmentCollectionAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);//view pager activity contains instances of the fragment
     }
+
     private class populateTableBackground extends AsyncTask<Void, Void, Void>{
         @Override
         protected Void doInBackground(Void... voids) {
@@ -39,7 +40,12 @@ public class QuizActivity extends AppCompatActivity {
                 String [] nextLine;
                 while( ( nextLine = reader.readNext() ) != null ) {
                     System.out.println(nextLine[0] +" "+nextLine[1] +" "+nextLine[2] +" "+ nextLine[3]);
-                    myDatabase.insertData(nextLine[0], nextLine[1], nextLine[2], nextLine[3]); //insert values into columns
+                    boolean inserted = myDatabase.insertData(nextLine[0], nextLine[1], nextLine[2], nextLine[3]); //insert values into columns
+                    if(inserted == true){
+                        Log.d("DATABASE_OPERATIONS", "Table created");
+                    }else{
+                        Log.d("DATABASE_OPERATIONS", "Table not created");
+                    }
                 }
             }catch(Exception e){
                 e.printStackTrace();

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
@@ -16,7 +17,7 @@ import java.util.HashMap;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     ContentValues contentValues;
-    SQLiteDatabase db;
+    SQLiteDatabase db = this.getWritableDatabase(); // checks that our database is created
     public static final String DATABASE_NAME = "USQUIZ.db";
     public static final int DATABASE_VERSION = 1;
     //---------------------------------------- QUIZ TABLE
@@ -43,19 +44,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(CREATE_QUESTIONS_TABLE);
-        Log.d("DATABASE_OPERATIONS", "Table created");
+        try{
+            sqLiteDatabase.execSQL(CREATE_QUESTIONS_TABLE);
+        }catch (SQLException ex){
+            ex.printStackTrace();
+        }
     }
 
-    public void insertData(String stateName, String stateCapital, String city1, String city2){
-        db = this.getWritableDatabase(); // checks that our database is created
+    public boolean insertData(String stateName, String stateCapital, String city1, String city2){
         contentValues = new ContentValues();
         contentValues.put(STATE_COLUMN_NAME, stateName);
         contentValues.put(STATE_COLUMN_CAPITAL, stateCapital);
         contentValues.put(STATE_COLUMN_CITY1, city1);
         contentValues.put(STATE_COLUMN_CITY2, city2);
         db.insert(QUIZ_QUESTION_TABLE,null,contentValues); //the specific table we want to populate is the quiz_question_table
-
+        return true;
     }
 
     @Override
