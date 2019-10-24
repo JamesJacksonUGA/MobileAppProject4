@@ -36,7 +36,7 @@ public class QuizActivity extends AppCompatActivity {
                 String [] nextLine;
                 while( ( nextLine = reader.readNext() ) != null ) {
                     System.out.println(nextLine[1]);
-                    myDatabase.insertData(nextLine[0], nextLine[1], nextLine[2], nextLine[3]);
+                    myDatabase.insertData(nextLine[0], nextLine[1], nextLine[2], nextLine[3]); //insert values into columns
                 }
             }catch(Exception e){
                 e.printStackTrace();
