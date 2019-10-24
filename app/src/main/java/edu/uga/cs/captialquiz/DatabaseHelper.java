@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+    ContentValues contentValues;
+    SQLiteDatabase db;
     public static final String DATABASE_NAME = "USQUIZ.db";
     //---------------------------------------- QUIZ TABLE
     public static final String QUIZ_QUESTION_TABLE = "QUIZES";
@@ -33,8 +35,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             +STATE_COLUMN_CITY2+ " TEXT "
             + ")";
 
-
-
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
         Log.d("DATABASE_OPERATIONS", "Database created");
@@ -44,18 +44,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(CREATE_QUESTIONS_TABLE);
         Log.d("DATABASE_OPERATIONS", "Table created");
-
     }
 
     public void insertData(String stateName, String stateCapital, String city1, String city2){
-        SQLiteDatabase db = this.getWritableDatabase(); // checks that our database is created
-        ContentValues contentValues = new ContentValues();
+        db = this.getWritableDatabase(); // checks that our database is created
+        contentValues = new ContentValues();
         contentValues.put(STATE_COLUMN_NAME, stateName);
         contentValues.put(STATE_COLUMN_CAPITAL, stateCapital);
         contentValues.put(STATE_COLUMN_CITY1, city1);
         contentValues.put(STATE_COLUMN_CITY2, city2);
         db.insert(QUIZ_QUESTION_TABLE,null,contentValues); //the specific table we want to populate is the quiz_question_table
-
 
     }
 

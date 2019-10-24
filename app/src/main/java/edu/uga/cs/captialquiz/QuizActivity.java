@@ -30,12 +30,12 @@ public class QuizActivity extends AppCompatActivity {
     public void readCSV(){ //creates the database, and reads the csv into the quiz table
         myDatabase = new DatabaseHelper(this); //creates the database upon activity startup
         Resources res = getResources();
-        InputStream inStream = res.openRawResource(R.raw.state_capitals);
+        InputStream inStream = res.openRawResource(R.raw.state_capitals1);
         CSVReader reader = new CSVReader( new InputStreamReader( inStream ) );
             try{
                 String [] nextLine;
                 while( ( nextLine = reader.readNext() ) != null ) {
-                    System.out.println(nextLine[1]);
+                    System.out.println(nextLine[0] +" "+nextLine[1] +" "+nextLine[2] +" "+ nextLine[3]);
                     myDatabase.insertData(nextLine[0], nextLine[1], nextLine[2], nextLine[3]); //insert values into columns
                 }
             }catch(Exception e){
