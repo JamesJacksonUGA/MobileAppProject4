@@ -48,7 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("drop table if exists "+QUIZ_QUESTION_TABLE);
         onCreate(sqLiteDatabase);
-        Log.d( "DATABASE_OPERATIONS", "Table  upgraded" );
+        Log.d( "DATABASE_OPERATIONS", "Table  upgradedd" );
 
     }
 
