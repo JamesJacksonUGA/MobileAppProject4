@@ -13,7 +13,7 @@ public class QuizActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
-        myDatabase = new DatabaseHelper(this);
+        myDatabase = new DatabaseHelper(this); //creates the database upon activity startup
 
         viewPager = findViewById(R.id.pager);
         adapter = new QuizFragmentCollectionAdapter(getSupportFragmentManager());
