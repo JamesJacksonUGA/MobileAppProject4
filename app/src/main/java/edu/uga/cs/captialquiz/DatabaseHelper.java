@@ -12,9 +12,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "USQUIZ.db";
     //---------------------------------------- QUIZ TABLE
@@ -53,26 +50,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
         Log.d( "DATABASE_OPERATIONS", "Table  upgraded" );
     }
-    public ArrayList<HashMap<String, String>> getAllStates(){
-        ArrayList<HashMap<String, String>> stateList;
-        stateList = new ArrayList<HashMap<String, String>>();
-        String selectQuery = "SELECT * FROM QUIZ_TABLE";
-        SQLiteDatabase database = this.getWritableDatabase();
-        Cursor cursor = database.rawQuery(selectQuery, null);
-        if(cursor.moveToFirst()){
-            do{
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put(STATE_ID, cursor.getString(0));
-                map.put(STATE_COLUMN_NAME, cursor.getString(1));
-                map.put(STATE_COLUMN_CAPITAL, cursor.getString(2));
-                map.put(STATE_COLUMN_CITY1, cursor.getString(3));
-                map.put(STATE_COLUMN_CITY2, cursor.getString(4));
-                stateList.add(map);
-            }while (cursor.moveToNext());
-        }
-        return stateList;
-    }
-
     public ArrayList<HashMap<String, String>> getAllStates(){
         ArrayList<HashMap<String, String>> stateList;
         stateList = new ArrayList<HashMap<String, String>>();
