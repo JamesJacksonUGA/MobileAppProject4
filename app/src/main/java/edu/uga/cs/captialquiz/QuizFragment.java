@@ -52,7 +52,7 @@ public class QuizFragment extends Fragment {
 
     public void viewAll(){
         DatabaseHelper db = new DatabaseHelper(getActivity());
-        Cursor res = db.getQuizTableData();
+        Cursor res = db.getQuizTableData(); //this is the cursor that reads the table
         res.moveToPosition((int) (Math.random() * 50));
         getID = res.getInt(0);
         getStateName = res.getString(1);

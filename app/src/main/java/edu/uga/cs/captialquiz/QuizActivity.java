@@ -55,13 +55,4 @@ public class QuizActivity extends AppCompatActivity {
         }
 
         }
-        public void viewAll(){
-            Cursor res = myDatabase.getQuizTableData();
-            res.moveToPosition((int) (Math.random() * 50));
-                System.out.println(res.getString(0));
-                System.out.println(res.getString(1));
-                System.out.println(res.getString(2));
-                System.out.println(res.getString(3));
-                System.out.println(res.getString(4));
-            }
     }
