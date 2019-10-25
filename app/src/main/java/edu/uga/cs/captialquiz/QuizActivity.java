@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,12 +40,12 @@ public class QuizActivity extends AppCompatActivity {
             try{
                 String [] nextLine;
                 while( ( nextLine = reader.readNext() ) != null ) {
-                    System.out.println(nextLine[0] +" "+nextLine[1] +" "+nextLine[2] +" "+ nextLine[3]);
+                   // System.out.println(nextLine[0] +" "+nextLine[1] +" "+nextLine[2] +" "+ nextLine[3]);
                     boolean inserted = myDatabase.insertData(nextLine[0], nextLine[1], nextLine[2], nextLine[3]); //insert values into columns
                     if(inserted == true){
-                        Log.d("DATABASE_OPERATIONS", "Table created");
+                        Log.d("DATABASE_OPERATIONS", "row created");
                     }else{
-                        Log.d("DATABASE_OPERATIONS", "Table not created");
+                        Log.d("DATABASE_OPERATIONS", "row not created");
                     }
                 }
             }catch(Exception e){
@@ -54,4 +55,13 @@ public class QuizActivity extends AppCompatActivity {
         }
 
         }
+        public void viewAll(){
+            Cursor res = myDatabase.getQuizTableData();
+            res.moveToPosition((int) (Math.random() * 50));
+                System.out.println(res.getString(0));
+                System.out.println(res.getString(1));
+                System.out.println(res.getString(2));
+                System.out.println(res.getString(3));
+                System.out.println(res.getString(4));
+            }
     }
