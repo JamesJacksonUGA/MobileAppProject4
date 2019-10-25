@@ -18,7 +18,6 @@ public class MainActivity extends AppCompatActivity {
         TextView title = findViewById(R.id.titleTextView);
         TextView desc = findViewById(R.id.descTextView);
         Button startBtn = findViewById(R.id.startButton);
-
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
