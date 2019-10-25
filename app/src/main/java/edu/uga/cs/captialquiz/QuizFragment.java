@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -24,6 +25,9 @@ public class QuizFragment extends Fragment {
     private String getCity1;
     private String getCity2;
     private TextView textView;
+    private RadioButton button1;
+    private RadioButton button2;
+    private RadioButton button3;
 
     public QuizFragment() {
         // Required empty public constructor
@@ -37,8 +41,16 @@ public class QuizFragment extends Fragment {
         viewAll();
         View view = inflater.inflate(R.layout.fragment_quiz, container, false);
         textView = view.findViewById(R.id.fragText);
+        button1 = view.findViewById(R.id.radioButton);
+        button2 = view.findViewById(R.id.radioButton2);
+        button3 = view.findViewById(R.id.radioButton3);
+     //   String [] filterAnswer = {getCapital, getCity1,getCity2};
         String message = getArguments().getString("message");
-        textView.setText(message + getStateName);
+        int pageCounter = getArguments().getInt("counter"); //help with counting page and identifying question number
+        textView.setText("Question "+pageCounter +": "+message + getStateName +"?");
+        button1.setText(getCapital);
+        button2.setText(getCity1);
+        button3.setText(getCity2);
 
         //ADD A LIST ADAPTER OR SUM TO DISPLAY CHOICES
 
@@ -54,11 +66,11 @@ public class QuizFragment extends Fragment {
         DatabaseHelper db = new DatabaseHelper(getActivity());
         Cursor res = db.getQuizTableData(); //this is the cursor that reads the table
         res.moveToPosition((int) (Math.random() * 50));
-        getID = res.getInt(0);
-        getStateName = res.getString(1);
-        getCapital = res.getString(2);
-        getCity1 = res.getString(3);
-        getCity2 = res.getString(4);
+        getID = res.getInt(0);//id
+        getStateName = res.getString(1); //statename
+        getCapital = res.getString(2); //capital
+        getCity1 = res.getString(3);//second largest
+        getCity2 = res.getString(4); //third largest
     }
     public int[] randomizeQuiz(){
         int[] arr = new int[6];

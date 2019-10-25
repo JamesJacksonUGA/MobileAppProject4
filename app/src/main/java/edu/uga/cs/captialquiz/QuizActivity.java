@@ -30,18 +30,33 @@ public class QuizActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);//view pager activity contains instances of the fragment
     }
 
+    /**
+     * Async function populates the quiz table upon activity start up
+     */
     private class populateTableBackground extends AsyncTask<Void, Void, Void>{
+//        @Override
+//        protected void onPreExecute() { //clears all table values before populating
+//            super.onPreExecute();
+//            myDatabase = new DatabaseHelper(getApplicationContext()); //creates the database upon activity startup
+//            Cursor res = myDatabase.allQuizTableData(); //this is the cursor that reads the table
+//            while(res.moveToNext()) {
+//                Integer deleteRow = myDatabase.deleteTable(res.getString(0));
+//                if(deleteRow > 0){
+//                    Log.d("DATABASE_OPERATIONS", "row deleted");
+//                }
+//            }
+//        }
         @Override
         protected Void doInBackground(Void... voids) {
-            myDatabase = new DatabaseHelper(getApplicationContext()); //creates the database upon activity startup
-            Resources res = getResources();
-            InputStream inStream = res.openRawResource(R.raw.state_capitals1);
-            CSVReader reader = new CSVReader( new InputStreamReader( inStream ) );
             try{
+                myDatabase = new DatabaseHelper(getApplicationContext()); //creates the database upon activity startup
+                Resources res = getResources();
+                InputStream inStream = res.openRawResource(R.raw.state_capitals1);
+                CSVReader reader = new CSVReader( new InputStreamReader( inStream ) );
                 String [] nextLine;
                 while( ( nextLine = reader.readNext() ) != null ) {
                    // System.out.println(nextLine[0] +" "+nextLine[1] +" "+nextLine[2] +" "+ nextLine[3]);
-                    boolean inserted = myDatabase.insertData(nextLine[0], nextLine[1], nextLine[2], nextLine[3]); //insert values into columns
+                    boolean inserted = myDatabase.populateQuizTable(nextLine[0], nextLine[1], nextLine[2], nextLine[3]); //insert values into columns
                     if(inserted == true){
                         Log.d("DATABASE_OPERATIONS", "row created");
                     }else{
@@ -55,4 +70,5 @@ public class QuizActivity extends AppCompatActivity {
         }
 
         }
+
     }

@@ -22,11 +22,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     //---------------------------------------- QUIZ TABLE
     public static final String QUIZ_QUESTION_TABLE = "QUIZES";
-    public static final String STATE_ID = "id";
-    public static final String STATE_COLUMN_NAME = "State";
-    public static final String STATE_COLUMN_CAPITAL = "Capital";
-    public static final String STATE_COLUMN_CITY1 = "Second_City";
-    public static final String STATE_COLUMN_CITY2 = "Third_City";
+    public static final String STATE_ID = "ID";
+    public static final String STATE_COLUMN_NAME = "STATE";
+    public static final String STATE_COLUMN_CAPITAL = "CAPITAL";
+    public static final String STATE_COLUMN_CITY1 = "SECOND_CITY";
+    public static final String STATE_COLUMN_CITY2 = "THIRD_CITY";
     //------------------------------------------
 
     public static final String CREATE_QUESTIONS_TABLE =
@@ -51,7 +51,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public boolean insertData(String stateName, String stateCapital, String city1, String city2){
+    /**
+     * This function populates the quiz table
+     * @param stateName
+     * @param stateCapital
+     * @param city1
+     * @param city2
+     * @return
+     */
+    public boolean populateQuizTable(String stateName, String stateCapital, String city1, String city2){
         contentValues = new ContentValues();
         contentValues.put(STATE_COLUMN_NAME, stateName);
         contentValues.put(STATE_COLUMN_CAPITAL, stateCapital);
@@ -60,9 +68,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(QUIZ_QUESTION_TABLE,null,contentValues); //the specific table we want to populate is the quiz_question_table
         return true;
     }
+    public Integer deleteTable(String id){
+        return db.delete(QUIZ_QUESTION_TABLE, "ID = ?", new String[] {id});
+    }
 
+
+    /**
+     * Want to iterate through quiz table with a limit of 50 rows
+     * @return
+     */
     public Cursor getQuizTableData(){
         Cursor res = db.rawQuery("SELECT * FROM "+QUIZ_QUESTION_TABLE+" LIMIT 50", null);
+//        Cursor res = db.rawQuery("SELECT * FROM "+QUIZ_QUESTION_TABLE, null);
+        return res;
+    }
+    public Cursor allQuizTableData(){
+        Cursor res = db.rawQuery("SELECT * FROM "+QUIZ_QUESTION_TABLE, null);
         return res;
     }
 
