@@ -90,7 +90,7 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean populateCompleteTable(int quiz1ID, int quiz2ID, int quiz3ID, int quiz4ID, int quiz5ID, int quiz6ID, String quizDate, int correctAnwers){
+    public void populateCompleteTable(int quiz1ID, int quiz2ID, int quiz3ID, int quiz4ID, int quiz5ID, int quiz6ID, String quizDate, int correctAnwers){
         contentValues = new ContentValues();
         contentValues.put(QUIZ1, quiz1ID);
         contentValues.put(QUIZ2, quiz2ID);
@@ -102,7 +102,7 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(QUIZ_DATE, quizDate);
         contentValues.put(ANSWERS_CORRECT, correctAnwers);
         db.insert(ANSWERED_QUIZ_QUESTION_TABLE,null,contentValues); //the specific table we want to populate is the quiz_question_table
-        return true;
+       // return true;
     }
     public Integer deleteTable(String id){
         return db.delete(QUIZ_QUESTION_TABLE, "ID = ?", new String[] {id});
