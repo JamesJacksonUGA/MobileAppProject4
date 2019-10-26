@@ -51,7 +51,7 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
                     +QUIZ5+ " INTEGER, "
                     +QUIZ6+ " INTEGER, "
                     +QUIZ_DATE+ " TEXT, "
-                    +ANSWERS_CORRECT+ " TEXT "
+                    +ANSWERS_CORRECT+ " INTEGER "
                     +")";
 
     //---------------------------------------------------
@@ -90,9 +90,8 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean populateCompleteTable(long id, long quiz1ID, long quiz2ID, long quiz3ID, long quiz4ID, long quiz5ID, long quiz6ID, String quizDate, String correctAnwers){
+    public boolean populateCompleteTable(int quiz1ID, int quiz2ID, int quiz3ID, int quiz4ID, int quiz5ID, int quiz6ID, String quizDate, int correctAnwers){
         contentValues = new ContentValues();
-        contentValues.put(QUIZ_ID, id);
         contentValues.put(QUIZ1, quiz1ID);
         contentValues.put(QUIZ2, quiz2ID);
         contentValues.put(QUIZ3, quiz3ID);
