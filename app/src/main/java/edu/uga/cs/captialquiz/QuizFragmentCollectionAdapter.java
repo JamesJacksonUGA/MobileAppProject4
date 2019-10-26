@@ -16,9 +16,9 @@ public class QuizFragmentCollectionAdapter extends FragmentPagerAdapter {
         QuizFragment quizFragment = new QuizFragment();
         Bundle bundle = new Bundle();
         position = position+1;
-
+        bundle.putInt("counter", position);
         //IF POSITION == X SET MESSAGE TO QUIZ QUESTION OR WHATEVER
-        bundle.putString("message","Quiz Question: "+position);
+        bundle.putString("message","What is the capital of: ");
         quizFragment.setArguments(bundle);
 
         return quizFragment;
