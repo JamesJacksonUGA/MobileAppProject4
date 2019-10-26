@@ -20,15 +20,42 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
     public static final String STATE_COLUMN_CAPITAL = "CAPITAL";
     public static final String STATE_COLUMN_CITY1 = "SECOND_CITY";
     public static final String STATE_COLUMN_CITY2 = "THIRD_CITY";
-    //------------------------------------------
 
     public static final String CREATE_QUESTIONS_TABLE =
             "CREATE TABLE "+QUIZ_QUESTION_TABLE+" (" +STATE_ID+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            +STATE_COLUMN_NAME+ " TEXT, "
-            +STATE_COLUMN_CAPITAL+" TEXT, "
-            +STATE_COLUMN_CITY1+ " TEXT, "
-            +STATE_COLUMN_CITY2+ " TEXT "
-            + ")";
+                    +STATE_COLUMN_NAME+ " TEXT, "
+                    +STATE_COLUMN_CAPITAL+" TEXT, "
+                    +STATE_COLUMN_CITY1+ " TEXT, "
+                    +STATE_COLUMN_CITY2+ " TEXT "
+                    + ")";
+    //------------------------------------------
+
+    //------------------------------------------- Answered Quiz  table
+    public static final String ANSWERED_QUIZ_QUESTION_TABLE = "COMPLETE_QUIZ";
+    public static final String QUIZ_ID = "ID";
+    public static final String QUIZ1 = "QUIZ1";
+    public static final String QUIZ2 = "QUIZ2";
+    public static final String QUIZ3 = "QUIZ3";
+    public static final String QUIZ4 = "QUIZ4";
+    public static final String QUIZ5 = "QUIZ5";
+    public static final String QUIZ6 = "QUIZ6";
+    public static final String QUIZ_DATE = "QUIZ_DATE";
+    public static final String ANSWERS_CORRECT = "CORRECT_ANSWERS";
+
+    public static final String CREATE_ANSWERS_TABLE =
+            "CREATE TABLE "+ANSWERED_QUIZ_QUESTION_TABLE+" (" +QUIZ_ID+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    +QUIZ1+ " INTEGER, "
+                    +QUIZ2+" INTEGER, "
+                    +QUIZ3+ " INTEGER, "
+                    +QUIZ4+ " INTEGER, "
+                    +QUIZ5+ " INTEGER, "
+                    +QUIZ6+ " INTEGER, "
+                    +QUIZ_DATE+ " TEXT, "
+                    +ANSWERS_CORRECT+ " TEXT "
+                    +")";
+
+    //---------------------------------------------------
+
 
     public QuizDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -39,6 +66,7 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         try{
             sqLiteDatabase.execSQL(CREATE_QUESTIONS_TABLE);
+            sqLiteDatabase.execSQL(CREATE_ANSWERS_TABLE);
         }catch (SQLException ex){
             ex.printStackTrace();
         }
@@ -61,10 +89,25 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
         db.insert(QUIZ_QUESTION_TABLE,null,contentValues); //the specific table we want to populate is the quiz_question_table
         return true;
     }
+
+    public boolean populateCompleteTable(long id, long quiz1ID, long quiz2ID, long quiz3ID, long quiz4ID, long quiz5ID, long quiz6ID, String quizDate, String correctAnwers){
+        contentValues = new ContentValues();
+        contentValues.put(QUIZ_ID, id);
+        contentValues.put(QUIZ1, quiz1ID);
+        contentValues.put(QUIZ2, quiz2ID);
+        contentValues.put(QUIZ3, quiz3ID);
+        contentValues.put(QUIZ4, quiz4ID);
+        contentValues.put(QUIZ5, quiz5ID);
+        contentValues.put(QUIZ6, quiz6ID);
+        contentValues.put(QUIZ6, quiz6ID);
+        contentValues.put(QUIZ_DATE, quizDate);
+        contentValues.put(ANSWERS_CORRECT, correctAnwers);
+        db.insert(ANSWERED_QUIZ_QUESTION_TABLE,null,contentValues); //the specific table we want to populate is the quiz_question_table
+        return true;
+    }
     public Integer deleteTable(String id){
         return db.delete(QUIZ_QUESTION_TABLE, "ID = ?", new String[] {id});
     }
-
 
     /**
      * Want to iterate through quiz table with a limit of 50 rows
@@ -72,7 +115,6 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
      */
     public Cursor getQuizTableData(){
         Cursor res = db.rawQuery("SELECT * FROM "+QUIZ_QUESTION_TABLE+" LIMIT 50", null);
-//        Cursor res = db.rawQuery("SELECT * FROM "+QUIZ_QUESTION_TABLE, null);
         return res;
     }
     public Cursor allQuizTableData(){
@@ -82,6 +124,7 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+QUIZ_QUESTION_TABLE);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+QUIZ_QUESTION_TABLE);
         onCreate(sqLiteDatabase);
         Log.d( "DATABASE_OPERATIONS", "Table  upgraded" );
