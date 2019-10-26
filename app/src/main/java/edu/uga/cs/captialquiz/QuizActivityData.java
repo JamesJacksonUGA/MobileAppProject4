@@ -8,28 +8,26 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TableRow;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.opencsv.CSVReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class QuizActivity extends AppCompatActivity {
+public class QuizActivityData extends AppCompatActivity {
     private ViewPager viewPager;
     private QuizFragmentCollectionAdapter adapter;
-    private DatabaseHelper myDatabase;
-    @Override
+    private QuizDatabaseHelper myDatabase;
+
+    public QuizActivityData(){}
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+        myDatabase = new QuizDatabaseHelper(this); //creates the database upon activity startup
         new populateTableBackground().execute();
         viewPager = findViewById(R.id.pager);
         adapter = new QuizFragmentCollectionAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);//view pager activity contains instances of the fragment
     }
-
     /**
      * Async function populates the quiz table upon activity start up
      */
@@ -37,7 +35,7 @@ public class QuizActivity extends AppCompatActivity {
 //        @Override
 //        protected void onPreExecute() { //clears all table values before populating
 //            super.onPreExecute();
-//            myDatabase = new DatabaseHelper(getApplicationContext()); //creates the database upon activity startup
+//            myDatabase = new QuizDatabaseHelper(getApplicationContext()); //creates the database upon activity startup
 //            Cursor res = myDatabase.allQuizTableData(); //this is the cursor that reads the table
 //            while(res.moveToNext()) {
 //                Integer deleteRow = myDatabase.deleteTable(res.getString(0));
@@ -49,7 +47,6 @@ public class QuizActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try{
-                myDatabase = new DatabaseHelper(getApplicationContext()); //creates the database upon activity startup
                 Resources res = getResources();
                 InputStream inStream = res.openRawResource(R.raw.state_capitals1);
                 CSVReader reader = new CSVReader( new InputStreamReader( inStream ) );
@@ -70,5 +67,6 @@ public class QuizActivity extends AppCompatActivity {
         }
 
         }
+
 
     }
