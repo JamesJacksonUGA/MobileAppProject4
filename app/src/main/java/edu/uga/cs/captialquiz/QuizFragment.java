@@ -1,11 +1,13 @@
 package edu.uga.cs.captialquiz;
 
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -52,9 +54,15 @@ public class QuizFragment extends Fragment {
         // Required empty public constructor
     }
 
+
     @Override
-    public void onCreate( Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
         myDatabase = new QuizDatabaseHelper(getContext());
         Cursor res = myDatabase.getQuizTableData(); //use limit of 50 states
         for(int i = 0; i < listofQuizes.length; i++){
@@ -66,6 +74,12 @@ public class QuizFragment extends Fragment {
             listofQuizes[i].setThirdLargeCity(res.getString(4));
             System.out.println("OVER HERE: " +listofQuizes[i].toString());
         }
+    }
+
+    @Override
+    public void onCreate( Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
     }
 
 

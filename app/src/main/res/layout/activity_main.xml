@@ -69,4 +69,20 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <Button
+        android:id="@+id/historyButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1F74BB"
+        android:shadowColor="#03A9F4"
+        android:text="View Quiz History"
+        android:textColor="#FFFFFF"
+        android:textColorLink="#9B4C45"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/startButton" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

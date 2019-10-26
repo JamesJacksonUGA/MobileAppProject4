@@ -98,7 +98,6 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(QUIZ4, quiz4ID);
         contentValues.put(QUIZ5, quiz5ID);
         contentValues.put(QUIZ6, quiz6ID);
-        contentValues.put(QUIZ6, quiz6ID);
         contentValues.put(QUIZ_DATE, quizDate);
         contentValues.put(ANSWERS_CORRECT, correctAnwers);
         db.insert(ANSWERED_QUIZ_QUESTION_TABLE,null,contentValues); //the specific table we want to populate is the quiz_question_table
@@ -116,8 +115,8 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
         Cursor res = db.rawQuery("SELECT * FROM "+QUIZ_QUESTION_TABLE+" LIMIT 50", null);
         return res;
     }
-    public Cursor allQuizTableData(){
-        Cursor res = db.rawQuery("SELECT * FROM "+QUIZ_QUESTION_TABLE, null);
+    public Cursor allQuizAnswers(){
+        Cursor res = db.rawQuery("SELECT * FROM "+ANSWERED_QUIZ_QUESTION_TABLE, null);
         return res;
     }
 
