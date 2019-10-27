@@ -67,6 +67,7 @@ public class QuizFragment extends Fragment {
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myDatabase = new QuizDatabaseHelper(getContext());
+       // MainActivity.numAnswers =0;
 
     }
     @Override
@@ -76,6 +77,7 @@ public class QuizFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) { //what do you want to save
         super.onSaveInstanceState(outState);
+        outState.putInt("CORRECT_ANSWERS",numberOfCorrectAnswers);
     }
 
     @Override
@@ -91,6 +93,7 @@ public class QuizFragment extends Fragment {
         complete = view.findViewById(R.id.complete);
         complete.setVisibility(View.GONE);
         numberOfCorrectAnswers = 0;
+
 
         quiz1 = getArguments().getStringArray("quiz1");
         quiz2 = getArguments().getStringArray("quiz2");
@@ -111,7 +114,7 @@ public class QuizFragment extends Fragment {
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(quiz1[1])){
-                        numberOfCorrectAnswers++;
+                        MainActivity.numAnswers++;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -128,7 +131,7 @@ public class QuizFragment extends Fragment {
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(quiz2[1])){
-                        numberOfCorrectAnswers++;
+                        MainActivity.numAnswers++;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -147,7 +150,7 @@ public class QuizFragment extends Fragment {
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(quiz3[1])){
-                        numberOfCorrectAnswers++;
+                        MainActivity.numAnswers++;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -166,7 +169,7 @@ public class QuizFragment extends Fragment {
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(quiz4[1])){
-                        numberOfCorrectAnswers++;
+                        MainActivity.numAnswers++;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -184,7 +187,7 @@ public class QuizFragment extends Fragment {
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(quiz5[1])){
-                        numberOfCorrectAnswers++;
+                        MainActivity.numAnswers++;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -202,7 +205,7 @@ public class QuizFragment extends Fragment {
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(quiz6[1])){
-                        numberOfCorrectAnswers++;
+                        MainActivity.numAnswers++;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -234,6 +237,7 @@ public class QuizFragment extends Fragment {
     public void onResume() {
         myDatabase.getWritableDatabase(); //get my database back
         super.onResume();
+
         Log.d(DEBUG_TAG, "Database Resumed "+myDatabase.getWritableDatabase());
     }
 
@@ -246,6 +250,7 @@ public class QuizFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
         Log.d(DEBUG_TAG, "Database Started "+myDatabase.getWritableDatabase());
     }
 
@@ -270,7 +275,7 @@ public class QuizFragment extends Fragment {
             try{
                 SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
                 Date date = new Date();
-                myDatabase.populateCompleteTable(quiz1[0],quiz2[0],quiz3[0],quiz4[0],quiz5[0],quiz6[0],formatter.format(date),numberOfCorrectAnswers);
+                myDatabase.populateCompleteTable(quiz1[0],quiz2[0],quiz3[0],quiz4[0],quiz5[0],quiz6[0],formatter.format(date),MainActivity.numAnswers);
             }catch(Exception e){
                 e.printStackTrace();
             }

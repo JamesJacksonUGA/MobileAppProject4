@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private Button startBtn;
     private Button historyButton;
     private QuizObjects[] listofQuizes = new QuizObjects[6];
+    static int numAnswers = 0;
     public static final String DEBUG_TAG = "DATABASE_INFO";
 
     @Override
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                numAnswers = 0;
                 myDatabase = new QuizDatabaseHelper(getApplicationContext());
                 Cursor res = myDatabase.getQuizTableData(); //use limit of 50 states
                 for(int i = 0; i < listofQuizes.length; i++) {
