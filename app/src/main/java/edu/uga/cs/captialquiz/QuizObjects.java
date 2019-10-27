@@ -1,11 +1,11 @@
 package edu.uga.cs.captialquiz;
 
 public class QuizObjects {
-    private long id;
-    private String stateName;
-    private String stateCapital;
-    private String secondLargeCity;
-    private String thirdLargeCity;
+    private int id;
+    private  String stateName;
+    private  String stateCapital;
+    private  String secondLargeCity;
+    private  String thirdLargeCity;
 
     public QuizObjects() {
         this.id = -1;
@@ -15,19 +15,20 @@ public class QuizObjects {
         this.thirdLargeCity = null;
     }
 
-    public QuizObjects(long id, String stateName, String stateCapital, String secondLargeCity, String thirdLargeCity) {
-        this.id = -1;  // the primary key id will be set by a setter method
+    public QuizObjects(int id, String stateName, String stateCapital, String secondLargeCity, String thirdLargeCity) {
+        //this.id = -1;  // the primary key id will be set by a setter method
+        this.id = id;
         this.stateName = stateName;
         this.stateCapital = stateCapital;
         this.secondLargeCity = secondLargeCity;
         this.thirdLargeCity = thirdLargeCity;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -66,6 +67,7 @@ public class QuizObjects {
     public String toString() {
         return id + ": " + stateName + " " + stateCapital + " " + secondLargeCity + " " + thirdLargeCity;
     }
+
 
 
 }

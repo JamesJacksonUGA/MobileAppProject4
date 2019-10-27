@@ -1,18 +1,35 @@
 package edu.uga.cs.captialquiz;
 
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.opencsv.CSVReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 
 /**
@@ -20,139 +37,250 @@ import android.widget.TextView;
  */
 public class QuizFragment extends Fragment {
     public static final String DEBUG_TAG = "DATABASE_INFO";
-    private QuizDatabaseHelper db;
-    private QuizObjects quiz1 = new QuizObjects();
-    private QuizObjects quiz2 = new QuizObjects();
-    private QuizObjects quiz3 = new QuizObjects();
-    private QuizObjects quiz4 = new QuizObjects();
-    private QuizObjects quiz5 = new QuizObjects();
-    private QuizObjects quiz6 = new QuizObjects();
-    public QuizObjects[] listofQuizes = {quiz1, quiz2, quiz3, quiz4,quiz5, quiz6};
-    private int getID;
-    private String getStateName;
-    private String getCapital;
-    private String getCity1;
-    private String getCity2;
+    private QuizDatabaseHelper myDatabase;
+    private int numberOfCorrectAnswers;
+    String[] quiz1;
+    String[] quiz2;
+    String[] quiz3;
+    String[] quiz4;
+    String[] quiz5;
+    String[] quiz6;
     private TextView textView;
     private RadioButton button1;
     private RadioButton button2;
     private RadioButton button3;
+    private Button complete;
+    private RadioGroup radioGroup;
 
     public QuizFragment() {
         // Required empty public constructor
     }
 
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        db = new QuizDatabaseHelper(getActivity());
-        fillQuizQuestions();
-    }
+        myDatabase = new QuizDatabaseHelper(getContext());
 
+    }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) { //what do you want to save
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        //viewAll();
-        //collectStates();
-        View view = inflater.inflate(R.layout.fragment_quiz, container, false);
+        final View view = inflater.inflate(R.layout.fragment_quiz, container, false);
         textView = view.findViewById(R.id.fragText);
         button1 = view.findViewById(R.id.radioButton);
         button2 = view.findViewById(R.id.radioButton2);
         button3 = view.findViewById(R.id.radioButton3);
+        radioGroup = view.findViewById(R.id.radioGroup3);
+        complete = view.findViewById(R.id.complete);
+        complete.setVisibility(View.GONE);
+        numberOfCorrectAnswers = 0;
 
-
+        quiz1 = getArguments().getStringArray("quiz1");
+        quiz2 = getArguments().getStringArray("quiz2");
+        quiz3 = getArguments().getStringArray("quiz3");
+        quiz4 = getArguments().getStringArray("quiz4");
+        quiz5 = getArguments().getStringArray("quiz5");
+        quiz6 = getArguments().getStringArray("quiz6");
         String message = getArguments().getString("message");
         int pageCounter = getArguments().getInt("counter"); //help with counting page and identifying question number
+
         if(pageCounter == 1){
-            textView.setText("Question "+pageCounter +": "+message + listofQuizes[0].getStateName() +"?");
-            button1.setText(listofQuizes[0].getStateCapital());
-            button2.setText(listofQuizes[0].getSecondLargeCity());
-            button3.setText(listofQuizes[0].getThirdLargeCity());
+            textView.setText("Question "+pageCounter +": "+message + quiz1[0] +"?");
+            button3.setText(quiz1[1]);
+            button1.setText(quiz1[2]);
+            button2.setText(quiz1[3]);
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                    RadioButton checked = (RadioButton) view.findViewById(checkedId);
+                    if(checked.getText().equals(quiz1[1])){
+                        numberOfCorrectAnswers++;
+                        Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }else if (pageCounter == 2){
-            textView.setText("Question "+pageCounter +": "+message + listofQuizes[1].getStateName() +"?");
-            button1.setText(listofQuizes[1].getStateCapital());
-            button2.setText(listofQuizes[1].getSecondLargeCity());
-            button3.setText(listofQuizes[1].getThirdLargeCity());
+            textView.setText("Question "+pageCounter +": "+message + quiz2[0] +"?");
+            button2.setText(quiz2[1]);
+            button1.setText(quiz2[2]);
+            button3.setText(quiz2[3]);
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                    RadioButton checked = (RadioButton) view.findViewById(checkedId);
+                    if(checked.getText().equals(quiz2[1])){
+                        numberOfCorrectAnswers++;
+                        Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
+
         }else if (pageCounter == 3){
-            textView.setText("Question "+pageCounter +": "+message + listofQuizes[2].getStateName() +"?");
-            button1.setText(listofQuizes[2].getStateCapital());
-            button2.setText(listofQuizes[2].getSecondLargeCity());
-            button3.setText(listofQuizes[2].getThirdLargeCity());
+            textView.setText("Question "+pageCounter +": "+message + quiz3[0] +"?");
+            button1.setText(quiz3[1]);
+            button2.setText(quiz3[2]);
+            button3.setText(quiz3[3]);
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                    RadioButton checked = (RadioButton) view.findViewById(checkedId);
+                    if(checked.getText().equals(quiz3[1])){
+                        numberOfCorrectAnswers++;
+                        Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
+
         }else if (pageCounter == 4){
-            textView.setText("Question "+pageCounter +": "+message + listofQuizes[3].getStateName() +"?");
-            button1.setText(listofQuizes[3].getStateCapital());
-            button2.setText(listofQuizes[3].getSecondLargeCity());
-            button3.setText(listofQuizes[3].getThirdLargeCity());
+            textView.setText("Question "+pageCounter +": "+message + quiz4[0] +"?");
+            button2.setText(quiz4[1]);
+            button1.setText(quiz4[2]);
+            button3.setText(quiz4[3]);
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                    RadioButton checked = (RadioButton) view.findViewById(checkedId);
+                    if(checked.getText().equals(quiz4[1])){
+                        numberOfCorrectAnswers++;
+                        Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
         }else if (pageCounter == 5){
-            textView.setText("Question "+pageCounter +": "+message + listofQuizes[4].getStateName() +"?");
-            button1.setText(listofQuizes[4].getStateCapital());
-            button2.setText(listofQuizes[4].getSecondLargeCity());
-            button3.setText(listofQuizes[4].getThirdLargeCity());
+            textView.setText("Question "+pageCounter +": "+message + quiz5[0] +"?");
+            button2.setText(quiz5[1]);
+            button3.setText(quiz5[2]);
+            button1.setText(quiz5[3]);
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                    RadioButton checked = (RadioButton) view.findViewById(checkedId);
+                    if(checked.getText().equals(quiz5[1])){
+                        numberOfCorrectAnswers++;
+                        Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
         }else if (pageCounter == 6){
-            textView.setText("Question "+pageCounter +": "+message + listofQuizes[5].getStateName() +"?");
-            button1.setText(listofQuizes[5].getStateCapital());
-            button2.setText(listofQuizes[5].getSecondLargeCity());
-            button3.setText(listofQuizes[5].getThirdLargeCity());
+            textView.setText("Question "+pageCounter +": "+message + quiz6[0] +"?");
+            button1.setText(quiz6[1]);
+            button2.setText(quiz6[2]);
+            button3.setText(quiz6[3]);
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                    RadioButton checked = (RadioButton) view.findViewById(checkedId);
+                    if(checked.getText().equals(quiz6[1])){
+                        numberOfCorrectAnswers++;
+                        Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
+        }else {
+            textView.setVisibility(View.GONE);
+            button1.setVisibility(View.GONE);
+            button2.setVisibility(View.GONE);
+            button3.setVisibility(View.GONE);
+            complete.setVisibility(View.VISIBLE);
+            complete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new populateQuizSessionToDatabase().execute();
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    startActivity(intent);
+                }
+            });
         }
-//        State state = stateArray[pageCounter];
-//        textView.setText("Question "+pageCounter +": "+message + quiz1.getStateName() +"?");
-//        button1.setText(quiz1.getStateCapital());
-//        button2.setText(quiz1.getSecondLargeCity());
-//        button3.setText(quiz1.getThirdLargeCity());
         //ADD A LIST ADAPTER OR SUM TO DISPLAY CHOICES
         return view;
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
 
     @Override
     public void onResume() {
-        db.getWritableDatabase();
+        myDatabase.getWritableDatabase(); //get my database back
         super.onResume();
-        Log.d(DEBUG_TAG, "Database Resumed");
+        Log.d(DEBUG_TAG, "Database Resumed "+myDatabase.getWritableDatabase());
     }
 
-//    @Override
-//    public void onPause() {
-//        db.close();
-//        super.onPause();
-//        Log.d(DEBUG_TAG, "Database Closed");
-//
-//    }
+    @Override
+    public void onPause() {
+        myDatabase.close(); //close my database
+        super.onPause();
+        Log.d(DEBUG_TAG, "Database Closed "+myDatabase.getWritableDatabase());
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(DEBUG_TAG, "Database Started "+myDatabase.getWritableDatabase());
+    }
 
-    public void fillQuizQuestions(){
-        for(int i = 0; i < 6; i++){
-            Cursor res = db.getQuizTableData();
-            res.moveToPosition((int) (Math.random() * 51));
-            listofQuizes[i].setId(res.getInt(0));
-            listofQuizes[i].setStateName(res.getString(1));
-            listofQuizes[i].setStateCapital(res.getString(2));
-            listofQuizes[i].setSecondLargeCity(res.getString(3));
-            listofQuizes[i].setThirdLargeCity(res.getString(4));
-            System.out.println("OVER HERE: " +listofQuizes[i].toString());
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(DEBUG_TAG, "Database Destroyed "+myDatabase.getWritableDatabase());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(DEBUG_TAG, "Database Stopped "+myDatabase.getWritableDatabase());
+    }
+
+    /**
+     * Async task to add quiz session into database
+     */
+    private class populateQuizSessionToDatabase extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try{
+                SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+                Date date = new Date();
+                myDatabase.populateCompleteTable(quiz1[0],quiz2[0],quiz3[0],quiz4[0],quiz5[0],quiz6[0],formatter.format(date),numberOfCorrectAnswers);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
         }
     }
-
-    /**This method handles picking random numbers for the quiz. use the returned array to map to the array of state objects.
-    *create a new array containing 6 objects randomly selected from AOB, set radio text/question equal to info gotten from that
-     * array[position]
-     * */
-
-    public void viewAll(){
-        Cursor res = db.getQuizTableData();
-        res.moveToPosition((int) (Math.random() * 51));
-//        getID = res.getInt(0);//id
-//        getStateName = res.getString(1); //statename
-//        getCapital = res.getString(2); //capital
-//        getCity1 = res.getString(3);//second largest
-//        getCity2 = res.getString(4); //third largest
-    }
-
-
-
 }
