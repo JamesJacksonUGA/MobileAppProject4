@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     public void mainFunction(){
         Set<Integer> set = new HashSet<>(6);
         set.clear();
-        for(int i = 0; i < 6; i++){
+        for(int i = 0; i < 7; i++){
             int num =(int)( Math.random()*50);
             set.add(num);
         }
