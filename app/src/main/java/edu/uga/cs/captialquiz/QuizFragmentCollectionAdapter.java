@@ -7,8 +7,15 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 public class QuizFragmentCollectionAdapter extends FragmentPagerAdapter {
-    public QuizFragmentCollectionAdapter(FragmentManager fm){
+    private String[] quiz1, quiz2, quiz3, quiz4, quiz5, quiz6;
+    public QuizFragmentCollectionAdapter(FragmentManager fm, String[] quiz1, String[] quiz2, String[] quiz3, String[] quiz4, String[] quiz5, String[] quiz6){
         super (fm);
+        this.quiz1 = quiz1;
+        this.quiz2 = quiz2;
+        this.quiz3 = quiz3;
+        this.quiz4 = quiz4;
+        this.quiz5 = quiz5;
+        this.quiz6 = quiz6;
     }
 
     @Override
@@ -16,6 +23,12 @@ public class QuizFragmentCollectionAdapter extends FragmentPagerAdapter {
         QuizFragment quizFragment = new QuizFragment();
         Bundle bundle = new Bundle();
         position = position+1;
+        bundle.putStringArray("quiz1", quiz1);
+        bundle.putStringArray("quiz2", quiz2);
+        bundle.putStringArray("quiz3", quiz3);
+        bundle.putStringArray("quiz4", quiz4);
+        bundle.putStringArray("quiz5", quiz5);
+        bundle.putStringArray("quiz6", quiz6);
         bundle.putInt("counter", position);
         //IF POSITION == X SET MESSAGE TO QUIZ QUESTION OR WHATEVER
         bundle.putString("message","What is the capital of: ");

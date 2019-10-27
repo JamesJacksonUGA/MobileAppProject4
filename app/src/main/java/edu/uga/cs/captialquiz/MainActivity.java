@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private QuizDatabaseHelper myDatabase;
     private Button startBtn;
     private Button historyButton;
+    private QuizObjects[] listofQuizes = new QuizObjects[6];
     public static final String DEBUG_TAG = "DATABASE_INFO";
 
     @Override
@@ -40,7 +41,27 @@ public class MainActivity extends AppCompatActivity {
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                myDatabase = new QuizDatabaseHelper(getApplicationContext());
+                Cursor res = myDatabase.getQuizTableData(); //use limit of 50 states
+                for(int i = 0; i < listofQuizes.length; i++) {
+                    res.moveToPosition((int) (Math.random() * 50));
+                    listofQuizes[i] = new QuizObjects(res.getInt(0), res.getString(1), res.getString(2), res.getString(3), res.getString(4));
+                    System.out.println("OVER HERE: " + listofQuizes[i].toString());
+                }
                 Intent intent = new Intent(getApplicationContext(), QuizActivityData.class);
+                intent.putExtra("quiz1", new String[]{
+                        listofQuizes[0].getStateName(), listofQuizes[0].getStateCapital(), listofQuizes[0].getSecondLargeCity(), listofQuizes[0].getThirdLargeCity()
+                });
+                intent.putExtra("quiz2", new String[]{
+                        listofQuizes[1].getStateName(), listofQuizes[1].getStateCapital(), listofQuizes[1].getSecondLargeCity(), listofQuizes[1].getThirdLargeCity()});
+                intent.putExtra("quiz3", new String[]{
+                        listofQuizes[2].getStateName(), listofQuizes[2].getStateCapital(), listofQuizes[2].getSecondLargeCity(), listofQuizes[2].getThirdLargeCity()});
+                intent.putExtra("quiz4", new String[]{
+                        listofQuizes[3].getStateName(), listofQuizes[3].getStateCapital(), listofQuizes[3].getSecondLargeCity(), listofQuizes[3].getThirdLargeCity()});
+                intent.putExtra("quiz5", new String[]{
+                        listofQuizes[4].getStateName(), listofQuizes[4].getStateCapital(), listofQuizes[4].getSecondLargeCity(), listofQuizes[4].getThirdLargeCity()});
+                intent.putExtra("quiz6", new String[]{
+                        listofQuizes[5].getStateName(), listofQuizes[5].getStateCapital(), listofQuizes[5].getSecondLargeCity(), listofQuizes[5].getThirdLargeCity()});
                 startActivity(intent);
 
             }
