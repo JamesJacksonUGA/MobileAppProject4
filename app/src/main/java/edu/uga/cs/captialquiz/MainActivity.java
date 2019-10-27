@@ -18,6 +18,8 @@ import com.opencsv.CSVReader;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     private QuizDatabaseHelper myDatabase;
@@ -37,6 +39,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void mainFunction(){
+        Set<Integer> set = new HashSet<>(6);
+        set.clear();
+        for(int i = 0; i < 6; i++){
+            int num =(int)( Math.random()*50);
+            set.add(num);
+        }
+
+        final Object [] arr = set.toArray();
+
         startBtn = findViewById(R.id.startButton);
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 myDatabase = new QuizDatabaseHelper(getApplicationContext());
                 Cursor res = myDatabase.getQuizTableData(); //use limit of 50 states
                 for(int i = 0; i < listofQuizes.length; i++) {
-                    res.moveToPosition((int) (Math.random() * 50));
+                    res.moveToPosition((int) arr[i]);
                     listofQuizes[i] = new QuizObjects(res.getInt(0), res.getString(1), res.getString(2), res.getString(3), res.getString(4));
                     System.out.println("OVER HERE: " + listofQuizes[i].toString());
                 }
