@@ -38,7 +38,7 @@ import java.util.ArrayList;
 public class QuizFragment extends Fragment {
     public static final String DEBUG_TAG = "DATABASE_INFO";
     private QuizDatabaseHelper myDatabase;
-    private int numberOfCorrectAnswers = 0;
+    private int numberOfCorrectAnswers;
     String[] quiz1;
     String[] quiz2;
     String[] quiz3;
@@ -90,6 +90,7 @@ public class QuizFragment extends Fragment {
         radioGroup = view.findViewById(R.id.radioGroup3);
         complete = view.findViewById(R.id.complete);
         complete.setVisibility(View.GONE);
+        numberOfCorrectAnswers = 0;
 
         quiz1 = getArguments().getStringArray("quiz1");
         quiz2 = getArguments().getStringArray("quiz2");
@@ -99,18 +100,18 @@ public class QuizFragment extends Fragment {
         quiz6 = getArguments().getStringArray("quiz6");
         String message = getArguments().getString("message");
         int pageCounter = getArguments().getInt("counter"); //help with counting page and identifying question number
-        numberOfCorrectAnswers = getArguments().getInt("counter"); //help with counting page and identifying question number
 
         if(pageCounter == 1){
             textView.setText("Question "+pageCounter +": "+message + quiz1[0] +"?");
-            button1.setText(quiz1[1]);
-            button2.setText(quiz1[2]);
-            button3.setText(quiz1[3]);
+            button3.setText(quiz1[1]);
+            button1.setText(quiz1[2]);
+            button2.setText(quiz1[3]);
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
-                    if(checked.getText().equals(quiz1[0])){
+                    if(checked.getText().equals(quiz1[1])){
+                        numberOfCorrectAnswers++;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -119,14 +120,15 @@ public class QuizFragment extends Fragment {
             });
         }else if (pageCounter == 2){
             textView.setText("Question "+pageCounter +": "+message + quiz2[0] +"?");
-            button1.setText(quiz2[1]);
-            button2.setText(quiz2[2]);
+            button2.setText(quiz2[1]);
+            button1.setText(quiz2[2]);
             button3.setText(quiz2[3]);
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(quiz2[1])){
+                        numberOfCorrectAnswers++;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -145,6 +147,7 @@ public class QuizFragment extends Fragment {
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(quiz3[1])){
+                        numberOfCorrectAnswers++;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -155,14 +158,15 @@ public class QuizFragment extends Fragment {
 
         }else if (pageCounter == 4){
             textView.setText("Question "+pageCounter +": "+message + quiz4[0] +"?");
-            button1.setText(quiz4[1]);
-            button2.setText(quiz4[2]);
+            button2.setText(quiz4[1]);
+            button1.setText(quiz4[2]);
             button3.setText(quiz4[3]);
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(quiz4[1])){
+                        numberOfCorrectAnswers++;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -172,14 +176,15 @@ public class QuizFragment extends Fragment {
             });
         }else if (pageCounter == 5){
             textView.setText("Question "+pageCounter +": "+message + quiz5[0] +"?");
-            button1.setText(quiz5[1]);
-            button2.setText(quiz5[2]);
-            button3.setText(quiz5[3]);
+            button2.setText(quiz5[1]);
+            button3.setText(quiz5[2]);
+            button1.setText(quiz5[3]);
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(quiz5[1])){
+                        numberOfCorrectAnswers++;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -197,6 +202,7 @@ public class QuizFragment extends Fragment {
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(quiz6[1])){
+                        numberOfCorrectAnswers++;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
