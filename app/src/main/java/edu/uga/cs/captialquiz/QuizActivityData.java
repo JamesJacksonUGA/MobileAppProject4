@@ -2,6 +2,8 @@ package edu.uga.cs.captialquiz;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
+
+import android.database.Cursor;
 import android.os.Bundle;
 
 public class QuizActivityData extends AppCompatActivity {
@@ -14,4 +16,5 @@ public class QuizActivityData extends AppCompatActivity {
         adapter = new QuizFragmentCollectionAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);//view pager activity contains instances of the fragment
     }
+
 }

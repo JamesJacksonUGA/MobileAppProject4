@@ -44,12 +44,12 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
 
     public static final String CREATE_ANSWERS_TABLE =
             "CREATE TABLE "+ANSWERED_QUIZ_QUESTION_TABLE+" (" +QUIZ_ID+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    +QUIZ1+ " INTEGER, "
-                    +QUIZ2+" INTEGER, "
-                    +QUIZ3+ " INTEGER, "
-                    +QUIZ4+ " INTEGER, "
-                    +QUIZ5+ " INTEGER, "
-                    +QUIZ6+ " INTEGER, "
+                    +QUIZ1+ " TEXT, "
+                    +QUIZ2+" TEXT, "
+                    +QUIZ3+ " TEXT, "
+                    +QUIZ4+ " TEXT, "
+                    +QUIZ5+ " TEXT, "
+                    +QUIZ6+ " TEXT, "
                     +QUIZ_DATE+ " TEXT, "
                     +ANSWERS_CORRECT+ " INTEGER "
                     +")";
@@ -90,7 +90,7 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public void populateCompleteTable(int quiz1ID, int quiz2ID, int quiz3ID, int quiz4ID, int quiz5ID, int quiz6ID, String quizDate, int correctAnwers){
+    public void populateCompleteTable(String quiz1ID, String quiz2ID, String quiz3ID, String quiz4ID, String quiz5ID, String quiz6ID, String quizDate, int correctAnwers){
         contentValues = new ContentValues();
         contentValues.put(QUIZ1, quiz1ID);
         contentValues.put(QUIZ2, quiz2ID);

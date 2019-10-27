@@ -34,9 +34,7 @@ public class MainActivity extends AppCompatActivity {
         TextView title = findViewById(R.id.titleTextView);
         TextView desc = findViewById(R.id.descTextView);
 
-
     }
-
     public void mainFunction(){
         startBtn = findViewById(R.id.startButton);
         startBtn.setOnClickListener(new View.OnClickListener() {
@@ -58,20 +56,28 @@ public class MainActivity extends AppCompatActivity {
                 }
                 StringBuffer buffer = new StringBuffer();
                 while(res.moveToNext()){
-                    buffer.append("SessionID: "+res.getInt(0) +"\n");
-                    buffer.append("QUIZ1ID: "+res.getInt(1) +"\n");
-                    buffer.append("QUIZ2ID: "+res.getInt(2) +"\n");
-                    buffer.append("QUIZ3ID: "+res.getInt(3) +"\n");
-                    buffer.append("QUIZ4ID: "+res.getInt(4) +"\n");
-                    buffer.append("QUIZ5ID: "+res.getInt(5) +"\n");
-                    buffer.append("QUIZ6ID: "+res.getInt(6) +"\n");
+                    buffer.append("Quiz Session: "+res.getInt(0) +"\n");
+                    buffer.append("Question 1: What is the capital of "+res.getString(1) +"?\n");
+                    buffer.append("Question 2: What is the capital of "+res.getString(2) +"?\n");
+                    buffer.append("Question 3: What is the capital of "+res.getString(3) +"?\n");
+                    buffer.append("Question 4: What is the capital of "+res.getString(4) +"?\n");
+                    buffer.append("Question 5: What is the capital of "+res.getString(5) +"?\n");
+                    buffer.append("Question 6: What is the capital of "+res.getString(6) +"?\n");
                     buffer.append("Date Completed: "+res.getString(7) +"\n");
                     buffer.append("Correct Answers: "+res.getInt(8) +"\n");
+                    buffer.append("\n");
+                    buffer.append("\n");
                 }
                 showHistory("Quiz History", buffer.toString());
             }
         });
     }
+
+    /**
+     * This function shows all history of completed quizes
+     * @param title
+     * @param information
+     */
     public void showHistory(String title, String information){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);

@@ -2,15 +2,18 @@ package edu.uga.cs.captialquiz;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +23,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.opencsv.CSVReader;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 
@@ -35,14 +38,8 @@ import java.util.ArrayList;
 public class QuizFragment extends Fragment {
     public static final String DEBUG_TAG = "DATABASE_INFO";
     private QuizDatabaseHelper myDatabase;
-    private QuizObjects quiz1 = new QuizObjects();
-    private QuizObjects quiz2 = new QuizObjects();
-    private QuizObjects quiz3 = new QuizObjects();
-    private QuizObjects quiz4 = new QuizObjects();
-    private QuizObjects quiz5 = new QuizObjects();
-    private QuizObjects quiz6 = new QuizObjects();
-    private QuizObjects[] listofQuizes = {quiz1, quiz2, quiz3, quiz4,quiz5, quiz6};
-    private int numberOfCorrectAnswers;
+    private QuizObjects[] listofQuizes = new QuizObjects[6];
+    private int numberOfCorrectAnswers = 0;
     private TextView textView;
     private RadioButton button1;
     private RadioButton button2;
@@ -58,6 +55,7 @@ public class QuizFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putInt("answers", numberOfCorrectAnswers);
     }
 
     @Override
@@ -67,11 +65,12 @@ public class QuizFragment extends Fragment {
         Cursor res = myDatabase.getQuizTableData(); //use limit of 50 states
         for(int i = 0; i < listofQuizes.length; i++){
             res.moveToPosition((int) (Math.random() * 50));
-            listofQuizes[i].setId(res.getInt(0));
-            listofQuizes[i].setStateName(res.getString(1));
-            listofQuizes[i].setStateCapital(res.getString(2));
-            listofQuizes[i].setSecondLargeCity(res.getString(3));
-            listofQuizes[i].setThirdLargeCity(res.getString(4));
+            listofQuizes[i] = new QuizObjects(res.getInt(0), res.getString(1), res.getString(2), res.getString(3), res.getString(4));
+//            listofQuizes[i].setId(res.getInt(0));
+//            listofQuizes[i].setStateName(res.getString(1));
+//            listofQuizes[i].setStateCapital(res.getString(2));
+//            listofQuizes[i].setSecondLargeCity(res.getString(3));
+//            listofQuizes[i].setThirdLargeCity(res.getString(4));
             System.out.println("OVER HERE: " +listofQuizes[i].toString());
         }
     }
@@ -79,9 +78,13 @@ public class QuizFragment extends Fragment {
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState == null ){
+            numberOfCorrectAnswers = 0;
+        }else {
+            numberOfCorrectAnswers = savedInstanceState.getInt("answers", 0);
+        }
 
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,22 +98,22 @@ public class QuizFragment extends Fragment {
         radioGroup = view.findViewById(R.id.radioGroup3);
         complete = view.findViewById(R.id.complete);
         complete.setVisibility(View.GONE);
-        numberOfCorrectAnswers = 0;
 
         String message = getArguments().getString("message");
         int pageCounter = getArguments().getInt("counter"); //help with counting page and identifying question number
+        numberOfCorrectAnswers = getArguments().getInt("counter"); //help with counting page and identifying question number
 
         if(pageCounter == 1){
             textView.setText("Question "+pageCounter +": "+message + listofQuizes[0].getStateName() +"?");
-            button1.setText(listofQuizes[0].getStateCapital());
+            button1.setText(listofQuizes[0].getThirdLargeCity());
             button2.setText(listofQuizes[0].getSecondLargeCity());
-            button3.setText(listofQuizes[0].getThirdLargeCity());
+            button3.setText(listofQuizes[0].getStateCapital());
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(listofQuizes[0].getStateCapital())){
-                        numberOfCorrectAnswers++;
+                        numberOfCorrectAnswers--;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -119,15 +122,15 @@ public class QuizFragment extends Fragment {
             });
         }else if (pageCounter == 2){
             textView.setText("Question "+pageCounter +": "+message + listofQuizes[1].getStateName() +"?");
-            button1.setText(listofQuizes[1].getStateCapital());
-            button2.setText(listofQuizes[1].getSecondLargeCity());
+            button1.setText(listofQuizes[1].getSecondLargeCity());
+            button2.setText(listofQuizes[1].getStateCapital());
             button3.setText(listofQuizes[1].getThirdLargeCity());
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(listofQuizes[1].getStateCapital())){
-                        numberOfCorrectAnswers++;
+                        numberOfCorrectAnswers--;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -146,7 +149,7 @@ public class QuizFragment extends Fragment {
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(listofQuizes[2].getStateCapital())){
-                        numberOfCorrectAnswers++;
+                        numberOfCorrectAnswers--;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -157,15 +160,15 @@ public class QuizFragment extends Fragment {
 
         }else if (pageCounter == 4){
             textView.setText("Question "+pageCounter +": "+message + listofQuizes[3].getStateName() +"?");
-            button1.setText(listofQuizes[3].getStateCapital());
-            button2.setText(listofQuizes[3].getSecondLargeCity());
-            button3.setText(listofQuizes[3].getThirdLargeCity());
+            button1.setText(listofQuizes[3].getThirdLargeCity());
+            button2.setText(listofQuizes[3].getStateCapital());
+            button3.setText(listofQuizes[3].getSecondLargeCity());
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(listofQuizes[3].getStateCapital())){
-                        numberOfCorrectAnswers++;
+                        numberOfCorrectAnswers--;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -193,15 +196,15 @@ public class QuizFragment extends Fragment {
             });
         }else if (pageCounter == 6){
             textView.setText("Question "+pageCounter +": "+message + listofQuizes[5].getStateName() +"?");
-            button1.setText(listofQuizes[5].getStateCapital());
+            button1.setText(listofQuizes[5].getThirdLargeCity());
             button2.setText(listofQuizes[5].getSecondLargeCity());
-            button3.setText(listofQuizes[5].getThirdLargeCity());
+            button3.setText(listofQuizes[5].getStateCapital());
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(listofQuizes[5].getStateCapital())){
-                        numberOfCorrectAnswers++;
+                        numberOfCorrectAnswers--;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -219,6 +222,8 @@ public class QuizFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     new populateQuizSessionToDatabase().execute();
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    startActivity(intent);
                 }
             });
         }
@@ -243,7 +248,23 @@ public class QuizFragment extends Fragment {
         myDatabase.close(); //close my database
         super.onPause();
         Log.d(DEBUG_TAG, "Database Closed "+myDatabase.getWritableDatabase());
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(DEBUG_TAG, "Database Started "+myDatabase.getWritableDatabase());
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(DEBUG_TAG, "Database Destroyed "+myDatabase.getWritableDatabase());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(DEBUG_TAG, "Database Stopped "+myDatabase.getWritableDatabase());
     }
 
     /**
@@ -253,8 +274,9 @@ public class QuizFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             try{
-                myDatabase.populateCompleteTable(listofQuizes[0].getId(),listofQuizes[1].getId(),listofQuizes[2].getId(),listofQuizes[3].getId(),listofQuizes[4].getId(),listofQuizes[5].getId(),"null",numberOfCorrectAnswers);
-
+                SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+                Date date = new Date();
+                myDatabase.populateCompleteTable(listofQuizes[0].getStateName(),listofQuizes[1].getStateName(),listofQuizes[2].getStateName(),listofQuizes[3].getStateName(),listofQuizes[4].getStateName(),listofQuizes[5].getStateName(),formatter.format(date),numberOfCorrectAnswers);
             }catch(Exception e){
                 e.printStackTrace();
             }
@@ -264,6 +286,7 @@ public class QuizFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            listofQuizes = null; //empty array
 
         }
     }
