@@ -3,17 +3,11 @@ package edu.uga.cs.captialquiz;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,13 +17,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.opencsv.CSVReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Array;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 
 /**
@@ -52,6 +39,9 @@ public class QuizFragment extends Fragment {
     private Button complete;
     private RadioGroup radioGroup;
 
+    /**
+     * Default constructor for fragment
+     */
     public QuizFragment() {
         // Required empty public constructor
     }
@@ -67,6 +57,7 @@ public class QuizFragment extends Fragment {
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myDatabase = new QuizDatabaseHelper(getContext());
+       // MainActivity.numAnswers =0;
 
     }
     @Override
@@ -76,12 +67,13 @@ public class QuizFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) { //what do you want to save
         super.onSaveInstanceState(outState);
+        outState.putInt("CORRECT_ANSWERS",numberOfCorrectAnswers);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the layout for this fragment and display quizes to their specific pages
         final View view = inflater.inflate(R.layout.fragment_quiz, container, false);
         textView = view.findViewById(R.id.fragText);
         button1 = view.findViewById(R.id.radioButton);
@@ -91,6 +83,7 @@ public class QuizFragment extends Fragment {
         complete = view.findViewById(R.id.complete);
         complete.setVisibility(View.GONE);
         numberOfCorrectAnswers = 0;
+
 
         quiz1 = getArguments().getStringArray("quiz1");
         quiz2 = getArguments().getStringArray("quiz2");
@@ -111,7 +104,7 @@ public class QuizFragment extends Fragment {
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(quiz1[1])){
-                        numberOfCorrectAnswers++;
+                        MainActivity.numAnswers++;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -128,7 +121,7 @@ public class QuizFragment extends Fragment {
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(quiz2[1])){
-                        numberOfCorrectAnswers++;
+                        MainActivity.numAnswers++;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -147,7 +140,7 @@ public class QuizFragment extends Fragment {
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(quiz3[1])){
-                        numberOfCorrectAnswers++;
+                        MainActivity.numAnswers++;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -166,7 +159,7 @@ public class QuizFragment extends Fragment {
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(quiz4[1])){
-                        numberOfCorrectAnswers++;
+                        MainActivity.numAnswers++;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -184,7 +177,7 @@ public class QuizFragment extends Fragment {
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(quiz5[1])){
-                        numberOfCorrectAnswers++;
+                        MainActivity.numAnswers++;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -202,7 +195,7 @@ public class QuizFragment extends Fragment {
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     RadioButton checked = (RadioButton) view.findViewById(checkedId);
                     if(checked.getText().equals(quiz6[1])){
-                        numberOfCorrectAnswers++;
+                        MainActivity.numAnswers++;
                         Toast.makeText(getActivity(), "Correct", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getActivity(), "Incorrect", Toast.LENGTH_SHORT).show();
@@ -228,15 +221,12 @@ public class QuizFragment extends Fragment {
         //ADD A LIST ADAPTER OR SUM TO DISPLAY CHOICES
         return view;
     }
-
-
     @Override
     public void onResume() {
         myDatabase.getWritableDatabase(); //get my database back
         super.onResume();
         Log.d(DEBUG_TAG, "Database Resumed "+myDatabase.getWritableDatabase());
     }
-
     @Override
     public void onPause() {
         myDatabase.close(); //close my database
@@ -246,37 +236,34 @@ public class QuizFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
         Log.d(DEBUG_TAG, "Database Started "+myDatabase.getWritableDatabase());
     }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         Log.d(DEBUG_TAG, "Database Destroyed "+myDatabase.getWritableDatabase());
     }
-
     @Override
     public void onStop() {
         super.onStop();
         Log.d(DEBUG_TAG, "Database Stopped "+myDatabase.getWritableDatabase());
     }
-
     /**
-     * Async task to add quiz session into database
+     * populateQuizSessionToDatabase is an async function that adds a completed quiz session into database
      */
     private class populateQuizSessionToDatabase extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
             try{
                 SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
-                Date date = new Date();
-                myDatabase.populateCompleteTable(quiz1[0],quiz2[0],quiz3[0],quiz4[0],quiz5[0],quiz6[0],formatter.format(date),numberOfCorrectAnswers);
+                Date date = new Date(); //the date of completed quiz
+                myDatabase.populateCompleteTable(quiz1[0],quiz2[0],quiz3[0],quiz4[0],quiz5[0],quiz6[0],formatter.format(date),MainActivity.numAnswers);
             }catch(Exception e){
                 e.printStackTrace();
             }
             return null;
         }
-
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);

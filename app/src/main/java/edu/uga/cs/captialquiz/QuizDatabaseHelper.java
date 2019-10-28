@@ -30,7 +30,7 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
                     + ")";
     //------------------------------------------
 
-    //------------------------------------------- Answered Quiz  table
+    //------------------------------------------- Answered Quiz Table
     public static final String ANSWERED_QUIZ_QUESTION_TABLE = "COMPLETE_QUIZ";
     public static final String QUIZ_ID = "ID";
     public static final String QUIZ1 = "QUIZ1";
@@ -57,6 +57,10 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
     //---------------------------------------------------
 
 
+    /**
+     * Instance of database to be used for querying database
+     * @param context context of application
+     */
     public QuizDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         Log.d("DATABASE_OPERATIONS", "Database created");
@@ -74,11 +78,11 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * This function populates the quiz table
-     * @param stateName
-     * @param stateCapital
-     * @param city1
-     * @param city2
-     * @return
+     * @param stateName the name of the state to be inserted in database
+     * @param stateCapital the name of the state capital to be inserted in database
+     * @param city1 the name of the second largest city to be inserted in database
+     * @param city2 the name of the third largest city to be inserted in database
+     * @return returns true if data was inserted into database
      */
     public boolean populateQuizTable(String stateName, String stateCapital, String city1, String city2){
         contentValues = new ContentValues();
@@ -90,6 +94,17 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * This function populates the completed quizs
+     * @param quiz1ID quiz1 information
+     * @param quiz2ID quiz2 information
+     * @param quiz3ID quiz3 information
+     * @param quiz4ID quiz4 information
+     * @param quiz5ID quiz5 information
+     * @param quiz6ID quiz6 information
+     * @param quizDate quiz date of completion information
+     * @param correctAnwers number of correct answers from quizes
+     */
     public void populateCompleteTable(String quiz1ID, String quiz2ID, String quiz3ID, String quiz4ID, String quiz5ID, String quiz6ID, String quizDate, int correctAnwers){
         contentValues = new ContentValues();
         contentValues.put(QUIZ1, quiz1ID);
@@ -103,18 +118,29 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
         db.insert(ANSWERED_QUIZ_QUESTION_TABLE,null,contentValues); //the specific table we want to populate is the quiz_question_table
        // return true;
     }
+
+    /**
+     * Function allows to delete data from database
+     * @param id the id of the row we want to delete
+     * @return returns the index of deleted row
+     */
     public Integer deleteTable(String id){
         return db.delete(QUIZ_QUESTION_TABLE, "ID = ?", new String[] {id});
     }
 
     /**
      * Want to iterate through quiz table with a limit of 50 rows
-     * @return
+     * @return returns a cursor to iterate through database
      */
     public Cursor getQuizTableData(){
         Cursor res = db.rawQuery("SELECT * FROM "+QUIZ_QUESTION_TABLE+" LIMIT 50", null);
         return res;
     }
+
+    /**
+     * Want to iterate through all answered quiz questions
+     * @return returns a cursor to iterate through database
+     */
     public Cursor allQuizAnswers(){
         Cursor res = db.rawQuery("SELECT * FROM "+ANSWERED_QUIZ_QUESTION_TABLE, null);
         return res;
