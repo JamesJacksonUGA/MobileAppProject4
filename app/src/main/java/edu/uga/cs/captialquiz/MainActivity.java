@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
      * Main function is a function that sets up the quiz questions and view quiz history
      */
     public void mainFunction(){
-        Set<Integer> set = new HashSet<>(6);
+        Set<Integer> set = new HashSet<>(7);
         set.clear();
         for(int i = 0; i < 7; i++){
             int num =(int)( Math.random()*50);
