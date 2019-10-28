@@ -1,16 +1,13 @@
 package edu.uga.cs.captialquiz;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
-
-import android.database.Cursor;
 import android.os.Bundle;
 
 public class QuizActivityData extends AppCompatActivity {
     private ViewPager viewPager;
     private QuizFragmentCollectionAdapter adapter;
     String[] quiz1, quiz2, quiz3, quiz4, quiz5, quiz6;
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) { //view the quiz questions in quiz fragments class
         super.onCreate(savedInstanceState);
         quiz1 = getIntent().getStringArrayExtra("quiz1");
         quiz2 = getIntent().getStringArrayExtra("quiz2");

@@ -2,7 +2,6 @@ package edu.uga.cs.captialquiz;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -13,9 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.opencsv.CSVReader;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashSet;
@@ -39,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
         TextView desc = findViewById(R.id.descTextView);
 
     }
+
+    /**
+     * Main function is a function that sets up the quiz questions and view quiz history
+     */
     public void mainFunction(){
         Set<Integer> set = new HashSet<>(6);
         set.clear();
@@ -46,9 +47,7 @@ public class MainActivity extends AppCompatActivity {
             int num =(int)( Math.random()*50);
             set.add(num);
         }
-
         final Object [] arr = set.toArray();
-
         startBtn = findViewById(R.id.startButton);
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 for(int i = 0; i < listofQuizes.length; i++) {
                     res.moveToPosition((int) arr[i]);
                     listofQuizes[i] = new QuizObjects(res.getInt(0), res.getString(1), res.getString(2), res.getString(3), res.getString(4));
-                    System.out.println("OVER HERE: " + listofQuizes[i].toString());
+                    //System.out.println("OVER HERE: " + listofQuizes[i].toString());
                 }
                 Intent intent = new Intent(getApplicationContext(), QuizActivityData.class);
                 intent.putExtra("quiz1", new String[]{
@@ -76,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("quiz6", new String[]{
                         listofQuizes[5].getStateName(), listofQuizes[5].getStateCapital(), listofQuizes[5].getSecondLargeCity(), listofQuizes[5].getThirdLargeCity()});
                 startActivity(intent);
-
             }
         });
         historyButton = findViewById(R.id.historyButton);
@@ -85,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Cursor res = myDatabase.allQuizAnswers();
                 if(res.getCount() == 0){
-                    Toast.makeText(MainActivity.this, "Error Nothing Found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "No Quiz Started Yet", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 StringBuffer buffer = new StringBuffer();
@@ -109,8 +107,8 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * This function shows all history of completed quizes
-     * @param title
-     * @param information
+     * @param title the title of the alert dialog
+     * @param information the information to be displayed in the alert dialog
      */
     public void showHistory(String title, String information){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -120,11 +118,11 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
     /**
-     * Async function populates the quiz table upon activity start up
+     * populateTableBackground is an async function that populates the quiz table upon activity start up
      */
     private class populateTableBackground extends AsyncTask<Void, Void, Void> {
         @Override
-        protected void onPreExecute() {
+        protected void onPreExecute() { //checks that the database has been created
             super.onPreExecute();
             myDatabase = new QuizDatabaseHelper(getApplicationContext()); //creates the database upon activity startup
             Log.d(DEBUG_TAG, "MY DATABASE IS "+myDatabase.getWritableDatabase());
@@ -133,13 +131,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try{
-//                myDatabase.getWritableDatabase();
                 Resources res = getResources();
                 InputStream inStream = res.openRawResource(R.raw.state_capitals1);
                 CSVReader reader = new CSVReader( new InputStreamReader( inStream ) );
                 String [] nextLine;
                 while( ( nextLine = reader.readNext() ) != null ) {
-                    // System.out.println(nextLine[0] +" "+nextLine[1] +" "+nextLine[2] +" "+ nextLine[3]);
                     boolean inserted = myDatabase.populateQuizTable(nextLine[0], nextLine[1], nextLine[2], nextLine[3]); //insert values into columns
                     if(inserted == true){
                         Log.d("DATABASE_OPERATIONS", "row created");
