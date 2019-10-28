@@ -51,8 +51,8 @@ public class QuizDatabaseHelper extends SQLiteOpenHelper {
                     +QUIZ5+ " TEXT, "
                     +QUIZ6+ " TEXT, "
                     +QUIZ_DATE+ " TEXT, "
-                    +ANSWERS_CORRECT+ " INTEGER "
-                    +")";
+                    +ANSWERS_CORRECT+ " INTEGER, "
+                    +"FOREIGN KEY ("+QUIZ_ID+") REFERENCES "+QUIZ_QUESTION_TABLE+")";
 
     //---------------------------------------------------
 
